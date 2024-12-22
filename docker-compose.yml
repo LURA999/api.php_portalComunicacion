@@ -7,9 +7,9 @@ services:
     ports:
       - "8080:80"  # Puedes acceder a la aplicación a través de http://localhost:8080
     volumes:
-      - ./portal_api:/var/www/html  # Monta el directorio local 'api' dentro del contenedor
+      - ./api.php_portalComunicacion:/var/www/html  # Monta el directorio local 'api' dentro del contenedor
     networks:
-      - my-network   # Conectamos este contenedor a la red personalizada
+      - network-portalComunicacion   # Conectamos este contenedor a la red personalizada
     depends_on:
       - mysql
 
@@ -23,7 +23,7 @@ services:
     ports:
       - "3306:3306"  # Exponer el puerto de la base de datos
     networks:
-      - my-network  # Conectamos este contenedor a la red personalizada
+      - network-portalComunicacion  # Conectamos este contenedor a la red personalizada
     command: --bind-address=0.0.0.0
 
 networks:
