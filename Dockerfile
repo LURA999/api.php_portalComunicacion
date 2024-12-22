@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite
 
 # Copia los archivos de tu proyecto en el contenedor
-COPY api.php_portalComunicacion/ /var/www/html
+COPY portal_api/ /var/www/html
 
 # Expon el puerto 80 para acceder a tu aplicación
 EXPOSE 80
