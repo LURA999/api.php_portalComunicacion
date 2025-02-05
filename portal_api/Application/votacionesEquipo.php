@@ -17,10 +17,12 @@ class votacionesEquipo extends database {
     }
 
     function actualizarEquipo($input){
-        $sql = $this->connect()->prepare("update menu set nombre = :titulo, descripcion = :descrip, fecha = :fecha, cveLocal = :local where idMenu = :id;");
+        $fecha = substr($input["fecha"],0,10);
+        $sql = $this->connect()->prepare("update menu set nombre = :titulo, 
+        descripcion = :descrip, fecha = :fecha, cveLocal = :local where idMenu = :id;");
         $sql->bindParam(":titulo", $input["nombre"], PDO::PARAM_STR, 255);
         $sql->bindParam(":descrip", $input["descripcion"], PDO::PARAM_STR, 255);
-        $sql->bindParam(":fecha", $input["fecha"], PDO::PARAM_STR, 45);
+        $sql->bindParam(":fecha", $fecha, PDO::PARAM_STR, 45);
         $sql->bindParam(":local", $input["cveLocal"], PDO::PARAM_INT);
         $sql->bindParam(":id", $input["idMenu"], PDO::PARAM_INT);
         $sql->execute();

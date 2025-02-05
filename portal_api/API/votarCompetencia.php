@@ -57,7 +57,7 @@ try{
                echo $obj->eliminarUsuariosCompetencia($_GET["idU"], $_GET["idC"]);
             }
             
-            if(isset($_GET["idC"])){
+            if(isset($_GET["idC"]) && !isset($_GET["idU"])){
                echo $obj->eliminarCompetencia($_GET["idC"]);
             }
             

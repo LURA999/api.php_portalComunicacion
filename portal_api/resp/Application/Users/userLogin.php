@@ -112,11 +112,13 @@ class userLogin extends database{
                     $sql->bindparam(':bus', $like, PDO::PARAM_STR,50);
 
                     if(!is_null($fechaFinal) && $fechaFinal !="" && $fechaFinal !="null" ){
-                        $sql->bindParam(":fechaFinal", $fechaFinal, PDO::PARAM_STR);
+                        $ff = substr($fechaFinal,0,10);
+                        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR);
                     }
 
                     if (!is_null($fechaInicial) && $fechaInicial  !="" && $fechaInicial !="null") {
-                        $sql->bindParam(":fechaInicial", $fechaInicial, PDO::PARAM_STR);
+                        $fi = substr($fechaInicial,0,10);
+                        $sql->bindParam(":fechaInicial", $fi, PDO::PARAM_STR);
                     }   
 
                 } else {
@@ -133,11 +135,13 @@ class userLogin extends database{
                     }  
 
                     if(!is_null($fechaFinal) && $fechaFinal !="" && $fechaFinal !="null" ){
-                        $sql->bindParam(":fechaFinal", $fechaFinal, PDO::PARAM_STR);
+                        $ff = substr($fechaFinal,0,10);
+                        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR);
                     }
 
                     if (!is_null($fechaInicial) && $fechaInicial  !="" && $fechaInicial !="null") {
-                        $sql->bindParam(":fechaInicial", $fechaInicial, PDO::PARAM_STR);
+                        $fi = substr($fechaInicial,0,10);
+                        $sql->bindParam(":fechaInicial", $fi, PDO::PARAM_STR);
                     }   
                 }
                 break;
@@ -235,6 +239,9 @@ class userLogin extends database{
         if($input['img'] !== ''){
             $param = $param . ', img = lower(:img)';
         }
+        
+        $fn = substr($input["fechaNacimiento"],0,10);
+        $fi = substr($input["fechaIngreso"],0,10);
 
         $consulta = 'UPDATE usuario set '.$param.'
         where idUsuario = :idUsuario';
@@ -249,11 +256,10 @@ class userLogin extends database{
         $sql->bindparam(':correo', $input['correo'], PDO::PARAM_STR,55);
         $sql->bindparam(':cveRol', $input['cveRol'], PDO::PARAM_INT);
         $sql->bindparam(':cveLocal', $input['cveLocal'], PDO::PARAM_INT);
-        $sql->bindparam(':fechaNacimiento', $input['fechaNacimiento'], PDO::PARAM_STR,10);
-        $sql->bindparam(':fechaIngreso', $input['fechaIngreso'], PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaNacimiento', $fn, PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaIngreso', $fi, PDO::PARAM_STR,10);
         $sql->bindparam(':departamento', $input['departamento'], PDO::PARAM_STR,30);
         $sql->bindparam(':contrato', $input['contrato'], PDO::PARAM_INT);
- 
         if(isset($input['img']) && $input['img'] !== ''){  
             $sql->bindparam(':img', $input['img'], PDO::PARAM_STR);
             if ($modalidad == 'false' || $modalidad == false) {
@@ -299,6 +305,10 @@ class userLogin extends database{
     }
     
     function createUser($input){
+        
+        $fn = substr($input["fechaNacimiento"],0,10);
+        $fi = substr($input["fechaIngreso"],0,10);
+
         $contrasena = password_hash($input["contrasena"], PASSWORD_DEFAULT);
         $sql = $this->connect()->prepare('
         INSERT INTO usuario (usuario,nombres,apellidoPaterno,apellidoMaterno,correo,contrasena,cveRol,cveLocal,fechaNacimiento,img,fechaIngreso, cveDepartamento, contrato) 
@@ -311,9 +321,9 @@ class userLogin extends database{
         $sql->bindparam(':cveRol', $input['cveRol'], PDO::PARAM_INT);
         $sql->bindparam(':cveLocal', $input['cveLocal'], PDO::PARAM_INT);
         $sql->bindparam(':contrasena', $contrasena, PDO::PARAM_STR);
-        $sql->bindparam(':fechaNacimiento', $input['fechaNacimiento'], PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaNacimiento', $fn, PDO::PARAM_STR,10);
         $sql->bindparam(':img', $input['img'], PDO::PARAM_STR);
-        $sql->bindparam(':fechaIngreso', $input['fechaIngreso'], PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaIngreso', $fi, PDO::PARAM_STR,10);
         $sql->bindparam(':departamento', $input['departamento'], PDO::PARAM_STR,30);
         $sql->bindparam(':contrato', $input['contrato'], PDO::PARAM_INT);
 

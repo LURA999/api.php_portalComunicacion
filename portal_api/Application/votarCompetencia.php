@@ -160,6 +160,9 @@ class votarCompetencia extends database {
     }
     
     function actualizarCompetencia($input){
+        $fi = substr($input["fechaInicial"],0,10);
+        $ff = substr($input["fechaFinal"],0,10);
+
         $sql = $this->connect()->prepare("
            UPDATE `votaciones_competencia` 
            SET `nombre`= :nombre,`fecha_inicial`= :fechaInicial,`fecha_final`= :fechaFinal,`cveLocal`= :cveLocal 
@@ -167,8 +170,8 @@ class votarCompetencia extends database {
         ");
         
         $sql->bindParam(":nombre", $input["nombre"], PDO::PARAM_STR);
-        $sql->bindParam(":fechaInicial", $input["fechaInicial"], PDO::PARAM_STR);
-        $sql->bindParam(":fechaFinal", $input["fechaFinal"], PDO::PARAM_STR);
+        $sql->bindParam(":fechaInicial", $fi, PDO::PARAM_STR);
+        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR);
         $sql->bindParam(":cveLocal", $input["cveLocal"], PDO::PARAM_INT);
         $sql->bindParam(":idCompetencia", $input["idCompetencia"], PDO::PARAM_INT);
 
@@ -177,7 +180,6 @@ class votarCompetencia extends database {
     
     
     function actualizarActividad($input){
-        
         if($input[2] == 1){
         $sql = $this->connect()->prepare("
            UPDATE `votaciones_competencia` 
@@ -216,14 +218,17 @@ class votarCompetencia extends database {
     
     
     function insertarCompetencia($input){
+        // echo var_dump($input);
+        $fi = substr($input["fechaInicial"],0,10);
+        $ff = substr($input["fechaFinal"],0,10);
         $connection1 = $this->connect();
         $sql = $connection1->prepare("
-            INSERT INTO `votaciones_competencia`(`nombre`, `fecha_inicial`, `fecha_final`, `cveLocal`) 
-            VALUES (:nombre, :fechaInicial, :fechaFinal, :cveLocal);
+            INSERT INTO `votaciones_competencia`(`nombre`, `fecha_inicial`, `fecha_final`, `cveLocal`, `activar`) 
+            VALUES (:nombre, :fechaInicial, :fechaFinal, :cveLocal, 1);
         ");
         $sql->bindParam(":nombre", $input["nombre"], PDO::PARAM_STR);
-        $sql->bindParam(":fechaInicial", $input["fechaInicial"], PDO::PARAM_STR);
-        $sql->bindParam(":fechaFinal", $input["fechaFinal"], PDO::PARAM_STR);
+        $sql->bindParam(":fechaInicial", $fi, PDO::PARAM_STR);
+        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR);
         $sql->bindParam(":cveLocal", $input["cveLocal"], PDO::PARAM_INT);
         if ($sql->execute()) {
             $lastInsertedId = $connection1->lastInsertId();

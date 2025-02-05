@@ -72,7 +72,6 @@ class userLogin extends database{
        
     function searchUser($usuario, $hotel,$fechaInicial,$fechaFinal,$var,$tipoVista){
         $like = '%'.$usuario.'%';
-
         switch (intval($var)) {
             //El case 1, es para la lista de usuarios normales
             case 1:
@@ -113,14 +112,18 @@ class userLogin extends database{
                     LEFT JOIN visitas v ON v.usuario = u.idUsuario ".$com." ".$extensionIInicial." ".$extensionIFinal." ".$extensionCom."
                     WHERE (LOWER(concat(nombres, ' ',apellidoPaterno,' ',apellidoMaterno)) like LOWER(:bus) or  u.usuario like :bus) 
                     group by  SUBSTRING_INDEX(img, '.', 1) ".$extensionVista."  order by u.usuario desc;");
+
+
                     $sql->bindparam(':bus', $like, PDO::PARAM_STR,50);
 
                     if(!is_null($fechaFinal) && $fechaFinal !="" && $fechaFinal !="null" ){
-                        $sql->bindParam(":fechaFinal", $fechaFinal, PDO::PARAM_STR);
+                        $ff = substr($fechaFinal,0,10);
+                        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR);
                     }
 
                     if (!is_null($fechaInicial) && $fechaInicial  !="" && $fechaInicial !="null") {
-                        $sql->bindParam(":fechaInicial", $fechaInicial, PDO::PARAM_STR);
+                        $fi = substr($fechaInicial,0,10);
+                        $sql->bindParam(":fechaInicial", $fi, PDO::PARAM_STR);
                     }   
 
                 } else {
@@ -137,11 +140,13 @@ class userLogin extends database{
                     }  
 
                     if(!is_null($fechaFinal) && $fechaFinal !="" && $fechaFinal !="null" ){
-                        $sql->bindParam(":fechaFinal", $fechaFinal, PDO::PARAM_STR);
+                        $ff = substr($fechaFinal,0,10);     
+                        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR);
                     }
 
                     if (!is_null($fechaInicial) && $fechaInicial  !="" && $fechaInicial !="null") {
-                        $sql->bindParam(":fechaInicial", $fechaInicial, PDO::PARAM_STR);
+                        $fi = substr($fechaInicial,0,10);
+                        $sql->bindParam(":fechaInicial", $fi, PDO::PARAM_STR);
                     }   
                 }
                 break;
@@ -171,13 +176,30 @@ class userLogin extends database{
     }
 
     function getAllUsers($var){
+        $sql = '';
         switch (intval($var)) {
             case 1: 
-                $sql = $this->connect()->prepare('SELECT idUsuario, u.usuario, apellidoPaterno, apellidoMaterno, nombres, correo, idUsuario, cveRol,cveLocal, l.nombre local, fechaNacimiento, img, fechaIngreso, dep.departamento, contrato, c.nombre contratoNombre, count(fecha) fecha, cumple, aniversario
-                from usuario u INNER JOIN local l on cveLocal = idLocal INNER JOIN contrato c on contrato = idContrato LEFT JOIN visitas v  on v.usuario = idUsuario INNER JOIN departamentos dep on idDepartamento = cveDepartamento group by  SUBSTRING_INDEX(img, ".", 1) desc');
+                //SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+                $sql = $this->connect()->prepare('
+                SELECT idUsuario, u.usuario, apellidoPaterno, apellidoMaterno, nombres, correo, idUsuario, cveRol,cveLocal, l.nombre local, 
+                fechaNacimiento, img, fechaIngreso, dep.departamento, contrato, c.nombre contratoNombre, count(fecha) fecha, cumple, aniversario,
+                SUBSTRING_INDEX(img, ".", 1) AS ih
+                from usuario u 
+                INNER JOIN local l on cveLocal = idLocal 
+                INNER JOIN contrato c on contrato = idContrato LEFT JOIN visitas v  on v.usuario = idUsuario 
+                INNER JOIN departamentos dep on idDepartamento = cveDepartamento 
+                GROUP BY ih ORDER BY ih DESC;');
             break;
             case 2:
-                $sql = $this->connect()->prepare('SELECT idUsuario,usuario,nombres,apellidoPaterno,apellidoMaterno, fecha, l.nombre local, cveLocal, contrato, c.nombre contratoNombre, posicion, fechaInicio, fechaFinal from empleado_mes right join usuario u on cveUsuario = idUsuario inner join local l on cveLocal = idLocal inner join contrato c on contrato = idContrato order by fecha desc');
+                $sql = $this->connect()->prepare('
+                SELECT idUsuario,usuario,nombres,apellidoPaterno,apellidoMaterno, 
+                fecha, l.nombre local, cveLocal, contrato, c.nombre contratoNombre, posicion, fechaInicio, fechaFinal 
+                from empleado_mes 
+                right join usuario u on cveUsuario = idUsuario 
+                inner join local l on cveLocal = idLocal 
+                inner join contrato c on contrato = idContrato order 
+                by fecha desc');
             break;
         }
         $sql->execute();     
@@ -234,6 +256,7 @@ class userLogin extends database{
     }
 
     function updateUser($input,$modalidad){
+
         $consulta = "";
         $param = "usuario = :usuario, nombres = :nombres, apellidoPaterno = :apellidoPaterno, 
         apellidoMaterno = :apellidoMaterno, correo = :correo, cveRol = :cveRol, cveLocal = :cveLocal, 
@@ -250,7 +273,9 @@ class userLogin extends database{
 
         $consulta = 'UPDATE usuario set '.$param.'
         where idUsuario = :idUsuario';
-         
+        $fn = substr($input["fechaNacimiento"],0,10);
+        $fi = substr($input["fechaIngreso"],0,10);
+
         $sql = $this->connect()->prepare($consulta);
         $sql->bindparam(':usuario', $input['usuario'], PDO::PARAM_INT);
         $sql->bindparam(':idUsuario', $input['idUsuario'], PDO::PARAM_INT);
@@ -260,8 +285,8 @@ class userLogin extends database{
         $sql->bindparam(':correo', $input['correo'], PDO::PARAM_STR,55);
         $sql->bindparam(':cveRol', $input['cveRol'], PDO::PARAM_INT);
         $sql->bindparam(':cveLocal', $input['cveLocal'], PDO::PARAM_INT);
-        $sql->bindparam(':fechaNacimiento', $input['fechaNacimiento'], PDO::PARAM_STR,10);
-        $sql->bindparam(':fechaIngreso', $input['fechaIngreso'], PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaNacimiento', $fn, PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaIngreso', $fi, PDO::PARAM_STR,10);
         $sql->bindparam(':departamento', $input['departamento'], PDO::PARAM_STR,30);
         $sql->bindparam(':contrato', $input['contrato'], PDO::PARAM_INT);
         $sql->bindparam(':cumple', $input['cumple'], PDO::PARAM_INT);
@@ -325,6 +350,9 @@ class userLogin extends database{
     }
     
     function createUser($input){
+        $fn = substr($input["fechaNacimiento"],0,10);
+        $fi = substr($input["fechaIngreso"],0,10);
+
         $contrasena = password_hash($input["contrasena"], PASSWORD_DEFAULT);
         $sql = $this->connect()->prepare('
         INSERT INTO usuario (usuario,nombres,apellidoPaterno,apellidoMaterno,correo,contrasena,cveRol,cveLocal,fechaNacimiento,img,fechaIngreso, cveDepartamento, contrato) 
@@ -337,9 +365,9 @@ class userLogin extends database{
         $sql->bindparam(':cveRol', $input['cveRol'], PDO::PARAM_INT);
         $sql->bindparam(':cveLocal', $input['cveLocal'], PDO::PARAM_INT);
         $sql->bindparam(':contrasena', $contrasena, PDO::PARAM_STR);
-        $sql->bindparam(':fechaNacimiento', $input['fechaNacimiento'], PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaNacimiento', $fn, PDO::PARAM_STR,10);
         $sql->bindparam(':img', $input['img'], PDO::PARAM_STR);
-        $sql->bindparam(':fechaIngreso', $input['fechaIngreso'], PDO::PARAM_STR,10);
+        $sql->bindparam(':fechaIngreso', $fi, PDO::PARAM_STR,10);
         $sql->bindparam(':departamento', $input['departamento'], PDO::PARAM_STR,30);
         $sql->bindparam(':contrato', $input['contrato'], PDO::PARAM_INT);
 

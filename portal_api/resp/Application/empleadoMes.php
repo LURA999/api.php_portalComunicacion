@@ -51,10 +51,13 @@ class empleadoMes extends database {
         // $sql->execute();
         // $r = $sql->fetch(PDO::FETCH_NUM);
         // if ($r[0] == 2   ) {
+        
+            $fi = substr($in["fechaInicio"],0,10);
+            $ff = substr($in["fechaFinal"],0,10);
             $sql = $this->connect()->prepare("update empleado_mes set fecha = :fecha, fechaInicio = :fechaInicio, fechaFinal = :fechaFinal,posicion = :posicion where cveUsuario = :id;");
             $sql->bindParam(":fecha", $in["fecha"], PDO::PARAM_INT);
-            $sql->bindParam(":fechaInicio", $in["fechaInicio"], PDO::PARAM_STR, 45);
-            $sql->bindParam(":fechaFinal", $in["fechaFinal"], PDO::PARAM_STR, 45);
+            $sql->bindParam(":fechaInicio", $fi, PDO::PARAM_STR, 45);
+            $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR, 45);
             $sql->bindParam(":id", $in["idUsuario"], PDO::PARAM_INT);
             $sql->bindParam(":posicion", $in["posicion"], PDO::PARAM_INT);
             $sql->execute();
@@ -65,10 +68,13 @@ class empleadoMes extends database {
     }
 
     function insertarFechaCam($input){
+        
+        $fi = substr($input["fechaInicio"],0,10);
+        $ff = substr($input["fechaFinal"],0,10);
         $sql = $this->connect()->prepare("insert into empleado_mes (fecha,cveUsuario,posicion,fechaInicio,fechaFinal) values(:fecha, :id, :posicion, :fechaInicio, :fechaFinal);");
         $sql->bindParam(":fecha", $input["fecha"], PDO::PARAM_INT);
-        $sql->bindParam(":fechaInicio", $input["fechaInicio"], PDO::PARAM_STR, 45);
-        $sql->bindParam(":fechaFinal", $input["fechaFinal"], PDO::PARAM_STR, 45);
+        $sql->bindParam(":fechaInicio", $fi, PDO::PARAM_STR, 45);
+        $sql->bindParam(":fechaFinal", $ff, PDO::PARAM_STR, 45);
         $sql->bindParam(":id", $input["idUsuario"], PDO::PARAM_INT);
         $sql->bindParam(":posicion", $input["posicion"], PDO::PARAM_INT);
 

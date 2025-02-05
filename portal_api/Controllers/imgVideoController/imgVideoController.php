@@ -39,7 +39,11 @@ class imgVideoController
     //se realiza una actualizacion y tambien un select
     function actualizarVideoImg($var){
         $this->obj = $this->obj-> actualizarVideoImg($var);
-        $this->msg->exitoso("video/foto actualizado");
+        if($this->obj) {
+            $this->msg->exitoso("video/foto actualizado");
+        } else {
+            $this->msg->noExitoso("imgVideo","not found");
+        }
     }
 
     function actualizarTUPos($in) {

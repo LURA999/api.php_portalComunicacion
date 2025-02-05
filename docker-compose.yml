@@ -1,6 +1,6 @@
 services:
   php-apache:
-    image: php:8.1-apache
+    image: php:8.3-apache
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
       - mysql
 
   mysql:
-    image: mysql:8.0  # Usa la imagen de MySQL
+    image: mysql:8.4  # Usa la imagen de MySQL
     environment:
       MYSQL_ROOT_PASSWORD: root_password  # Configura la contraseña de root
       MYSQL_DATABASE: comunica_portalComunicacion  # Nombre de la base de datos a crear

@@ -12,10 +12,12 @@ class menu extends database {
 
     function actualizarComida($input){
         //echo var_dump($input);
+        
+        $fecha = substr($input["fecha"],0,10);
         $sql = $this->connect()->prepare("update menu set nombre = :titulo, descripcion = :descrip, fecha = :fecha, cveLocal = :local where idMenu = :id;");
         $sql->bindParam(":titulo", $input["nombre"], PDO::PARAM_STR, 255);
         $sql->bindParam(":descrip", $input["descripcion"], PDO::PARAM_STR, 255);
-        $sql->bindParam(":fecha", $input["fecha"], PDO::PARAM_STR, 45);
+        $sql->bindParam(":fecha", $fecha, PDO::PARAM_STR, 45);
         $sql->bindParam(":local", $input["cveLocal"], PDO::PARAM_INT);
         $sql->bindParam(":id", $input["idMenu"], PDO::PARAM_INT);
         $sql->execute();
@@ -23,11 +25,14 @@ class menu extends database {
     }
 
     function insertarComida($input){
-        $sql = $this->connect()->prepare("insert into menu (nombre,descripcion,fecha,cveLocal) 
+        
+        $fecha = substr($input["fecha"],0,10);
+        $sql = $this->connect()->prepare("
+        insert into menu (nombre,descripcion,fecha,cveLocal) 
         values(:titulo, :descrip, :fecha, :local)");
         $sql->bindParam(":titulo", $input["nombre"], PDO::PARAM_STR, 45);
         $sql->bindParam(":descrip", $input["descripcion"], PDO::PARAM_STR);
-        $sql->bindParam(":fecha", $input["fecha"], PDO::PARAM_STR, 45);
+        $sql->bindParam(":fecha", $fecha, PDO::PARAM_STR, 45);
         $sql->bindParam(":local", $input["cveLocal"], PDO::PARAM_INT);
         $sql->execute();
         return $sql;

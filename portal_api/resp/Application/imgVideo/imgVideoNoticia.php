@@ -5,10 +5,12 @@
     {
      
         function insertarVideoImg($input) {
+            $fi = substr($input["fechaInicial"],0,10);
+            $ff = substr($input["fechaFinal"],0,10);
             $sql = $this->connect()->prepare("insert into noticia (fechaInicial,fechaFinal,imgVideo,formato,cveLocal,titulo, descripcion,link) 
             values(:fechaInicial,:fechaFinal,:imgVideo,:form,:cveLocal,:titulo,:descripcion,:link)");
-            $sql ->bindParam(":fechaInicial",$input["fechaInicial"],PDO::PARAM_STR,30);
-            $sql ->bindParam(":fechaFinal",$input["fechaFinal"],PDO::PARAM_STR,30);
+            $sql ->bindParam(":fechaInicial",$fi,PDO::PARAM_STR,30);
+            $sql ->bindParam(":fechaFinal",$ff,PDO::PARAM_STR,30);
             $sql ->bindParam(":imgVideo", $input["imgVideo"],PDO::PARAM_STR);
             $sql ->bindParam(":form", explode("/", $input["formato"])[0] ,PDO::PARAM_STR);
             $sql ->bindParam(":cveLocal",$input["cveLocal"],PDO::PARAM_INT);
@@ -106,14 +108,16 @@
 
 
         function actualizarVideoImg($input){
+            $fi = substr($input["fechaInicial"],0,10);
+            $ff = substr($input["fechaFinal"],0,10);
            /* $sql2 = $this->connect()->prepare("select idNoticia,fechaInicial,fechaFinal,imgVideo, formato,cveLocal,titulo, descripcion from noticia;");
             $sql2 -> execute();
             $sql2 = $sql2 -> fetchAll(PDO::FETCH_ASSOC);*/
             $sql = $this->connect()->prepare("update noticia set fechaInicial = :fechaInicial , 
             fechaFinal = :fechaFinal, cveLocal = :cveLocal, titulo = :titulo, descripcion = :descripcion,
             imgVideo = :imgVideo, formato = :formato, link = :link where idNoticia = :idNoticia;");
-            $sql ->bindParam(":fechaInicial",$input["fechaInicial"],PDO::PARAM_STR,15);
-            $sql ->bindParam(":fechaFinal",$input["fechaFinal"],PDO::PARAM_STR,15);
+            $sql ->bindParam(":fechaInicial",$fi,PDO::PARAM_STR,15);
+            $sql ->bindParam(":fechaFinal",$ff,PDO::PARAM_STR,15);
             $sql ->bindParam(":cveLocal",$input["cveLocal"],PDO::PARAM_INT);
             $sql ->bindParam(":titulo",$input["titulo"],PDO::PARAM_STR,150);
             $sql ->bindParam(":imgVideo",$input["imgVideo"],PDO::PARAM_STR);

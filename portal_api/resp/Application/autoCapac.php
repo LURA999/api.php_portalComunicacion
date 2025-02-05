@@ -11,11 +11,13 @@ class autoCapac extends database {
     }
 
     function actualizarCapac($input){
+        $fi = substr($input["fechaInicial"],0,10);
+        $ff = substr($input["fechaFinal"],0,10);
         //echo var_dump($input);
         $sql = $this->connect()->prepare("update autocapacitaciones set nombre = :titulo, link = :link, fechaInicial = :fechaI, fechaFinal = :fechaF, cveLocal = :local where idAutoCap = :id;");
         $sql->bindParam(":titulo", $input["nombre"], PDO::PARAM_STR, 255);
-        $sql->bindParam(":fechaI", $input["fechaInicial"], PDO::PARAM_STR,15);
-        $sql->bindParam(":fechaF", $input["fechaFinal"], PDO::PARAM_STR, 15);
+        $sql->bindParam(":fechaI", $fi, PDO::PARAM_STR,15);
+        $sql->bindParam(":fechaF", $ff, PDO::PARAM_STR, 15);
         $sql->bindParam(":local", $input["cveLocal"], PDO::PARAM_INT);
         $sql->bindParam(":id", $input["idAutoCap"], PDO::PARAM_INT);
         $sql->bindParam(":link", $input["link"], PDO::PARAM_STR);
@@ -24,11 +26,13 @@ class autoCapac extends database {
     }
 
     function insertarCapac($input){
+        $fi = substr($input["fechaInicial"],0,10);
+        $ff = substr($input["fechaFinal"],0,10);
         $sql = $this->connect()->prepare("insert into autocapacitaciones (nombre,link,fechaInicial,fechaFinal,cveLocal) 
         values(:nombre, :link, :fechaI, :fechaF, :local)");
         $sql->bindParam(":nombre", $input["nombre"], PDO::PARAM_STR, 45);
-        $sql->bindParam(":fechaI", $input["fechaInicial"], PDO::PARAM_STR,15);
-        $sql->bindParam(":fechaF", $input["fechaFinal"], PDO::PARAM_STR, 15);
+        $sql->bindParam(":fechaI", $fi, PDO::PARAM_STR,15);
+        $sql->bindParam(":fechaF", $ff, PDO::PARAM_STR, 15);
         $sql->bindParam(":local", $input["cveLocal"], PDO::PARAM_INT);
         $sql->bindParam(":link", $input["link"], PDO::PARAM_STR);
         $sql->execute();

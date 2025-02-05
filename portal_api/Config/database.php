@@ -26,8 +26,8 @@ class database
         try {
             $con = new PDO(
                 "mysql:host=".$this->host.";
-		port=".$this->port.";
-		dbname=".$this->database.";",
+                port=".$this->port.";
+                dbname=".$this->database.";",
                 $this->username,
                 $this->password,
                 $options);

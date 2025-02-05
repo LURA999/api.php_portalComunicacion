@@ -5,13 +5,16 @@
     {
 
         function insertarVideoImg($input, $actualizar) {
+            
+            $fi = substr($input["fechaInicial"],0,10);
+            $ff = substr($input["fechaFinal"],0,10);
             if ($actualizar === true || $actualizar === "true") {
                 $sql = $this->connect()->prepare("update imgVideo set fechaInicial = :fechaInicial , 
                 fechaFinal = :fechaFinal, cveLocal = :cveLocal, imgVideo = :imgVideo ,link = :link, formato = :formato ,
                 posicion = :posicion
                 where cveLocal = :cveLocal and cveSeccion = :cveSeccion ;");
-                $sql ->bindParam(":fechaInicial",$input["fechaInicial"],PDO::PARAM_STR,15);
-                $sql ->bindParam(":fechaFinal",$input["fechaFinal"],PDO::PARAM_STR,15);
+                $sql ->bindParam(":fechaInicial",$fi,PDO::PARAM_STR,15);
+                $sql ->bindParam(":fechaFinal",$ff,PDO::PARAM_STR,15);
                 $sql ->bindParam(":imgVideo",$input["imgVideo"],PDO::PARAM_STR);
                 $sql ->bindParam(":formato", explode("/", $input["formato"])[0] ,PDO::PARAM_STR);
                 $sql ->bindParam(":cveLocal",$input["cveLocal"],PDO::PARAM_INT);
@@ -23,8 +26,8 @@
             } else {
                 $sql = $this->connect()->prepare("insert into imgVideo (fechaInicial,fechaFinal,imgVideo,formato,cveLocal,cveSeccion,link,posicion) 
                 values(:fechaInicial,:fechaFinal,:imgVideo,:form,:cveLocal,:cveSeccion,:link,:posicion)");
-                $sql ->bindParam(":fechaInicial",$input["fechaInicial"], PDO::PARAM_STR,30);
-                $sql ->bindParam(":fechaFinal",$input["fechaFinal"], PDO::PARAM_STR,30);
+                $sql ->bindParam(":fechaInicial",$fi, PDO::PARAM_STR,30);
+                $sql ->bindParam(":fechaFinal",$ff, PDO::PARAM_STR,30);
                 $sql ->bindParam(":imgVideo", $input["imgVideo"], PDO::PARAM_STR);
                 $sql ->bindParam(":form", explode("/", $input["formato"])[0], PDO::PARAM_STR);
                 $sql ->bindParam(":cveLocal",$input["cveLocal"], PDO::PARAM_INT);
@@ -123,6 +126,9 @@
         }
 
         function actualizarVideoImg($input){
+            
+            $fi = substr($input['obj']["fechaInicial"],0,10);
+            $ff = substr($input['obj']["fechaFinal"],0,10);
             //CUANDO QUIERES CAMBIAR TODO EXCPETO EL LOCAL
             if($input['obj']["cveLocal"] == $input['obj']["cveLocal2"]){
                 $sql2 = $this->connect()->prepare("select count(*) from imgVideo 
@@ -136,8 +142,8 @@
                 $sql = $this->connect()->prepare("update imgVideo set fechaInicial = :fechaInicial , 
                 fechaFinal = :fechaFinal, cveLocal = :cveLocal, imgVideo = :imgVideo, formato = :formato,link = :link,posicion = :posicion 
                 where idImgVideo = :idImgVideo ;");
-                $sql ->bindParam(":fechaInicial",$input['obj']["fechaInicial"],PDO::PARAM_STR,15);
-                $sql ->bindParam(":fechaFinal",$input['obj']["fechaFinal"],PDO::PARAM_STR,15);
+                $sql ->bindParam(":fechaInicial",$fi,PDO::PARAM_STR,15);
+                $sql ->bindParam(":fechaFinal",$ff,PDO::PARAM_STR,15);
                 $sql ->bindParam(":imgVideo",$input['obj']["imgVideo"],PDO::PARAM_STR);
                 $sql ->bindParam(":cveLocal",$input['obj']["cveLocal"],PDO::PARAM_INT);
                 $sql ->bindParam(":idImgVideo",$input['obj']["idImgVideo"],PDO::PARAM_INT);
@@ -150,8 +156,8 @@
                 $sql = $this->connect()->prepare("update imgVideo set fechaInicial = :fechaInicial , 
                 fechaFinal = :fechaFinal, cveLocal = :cveLocal, imgVideo = :imgVideo, formato = :formato,link = :link
                 where idImgVideo = :idImgVideo ;");
-                $sql ->bindParam(":fechaInicial",$input['obj']["fechaInicial"],PDO::PARAM_STR,15);
-                $sql ->bindParam(":fechaFinal",$input['obj']["fechaFinal"],PDO::PARAM_STR,15);
+                $sql ->bindParam(":fechaInicial",$fi,PDO::PARAM_STR,15);
+                $sql ->bindParam(":fechaFinal",$ff,PDO::PARAM_STR,15);
                 $sql ->bindParam(":imgVideo",$input['obj']["imgVideo"],PDO::PARAM_STR);
                 $sql ->bindParam(":cveLocal",$input['obj']["cveLocal"],PDO::PARAM_INT);
                 $sql ->bindParam(":idImgVideo",$input['obj']["idImgVideo"],PDO::PARAM_INT);
@@ -186,8 +192,8 @@
                 $sql = $this->connect()->prepare("update imgVideo set fechaInicial = :fechaInicial , 
                 fechaFinal = :fechaFinal, cveLocal = :cveLocal, imgVideo = :imgVideo, formato = :formato,link = :link,posicion = :posicion
                 where idImgVideo = :idImgVideo ;");
-                $sql -> bindParam(":fechaInicial",$input['obj']["fechaInicial"],PDO::PARAM_STR,15);
-                $sql -> bindParam(":fechaFinal",$input['obj']["fechaFinal"],PDO::PARAM_STR,15);
+                $sql -> bindParam(":fechaInicial",$fi,PDO::PARAM_STR,15);
+                $sql -> bindParam(":fechaFinal",$ff,PDO::PARAM_STR,15);
                 $sql -> bindParam(":imgVideo",$input['obj']["imgVideo"],PDO::PARAM_STR);
                 $sql -> bindParam(":cveLocal",$input['obj']["cveLocal"],PDO::PARAM_INT);
                 $sql -> bindParam(":idImgVideo",$input['obj']["idImgVideo"],PDO::PARAM_INT);

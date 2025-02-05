@@ -75,7 +75,7 @@ class votarCompetenciaController
     }
     
     function insertarVotacion($input){
-        $boolean = $this->obj->insertarVotacion($input);
+    $boolean = $this->obj->insertarVotacion($input);
         if($boolean){
             $this->msg->exitoso('inserted');
         }else{
@@ -84,11 +84,11 @@ class votarCompetenciaController
     }
     
     function eliminarUsuariosCompetencia($idU,$idC){
-    $this->obj = $this->obj->eliminarUsuariosCompetencia($idU,$idC);
-        if($this->obj){
-        $this->msg->exitoso('deleted');
+    $boolean = $this->obj->eliminarUsuariosCompetencia($idU,$idC);
+        if($boolean){
+            $this->msg->exitoso('deleted');
         }else{
-        $this->msg->noExitoso('deleted',[]);
+            $this->msg->noExitoso('deleted',[]);
         }
     }
 
